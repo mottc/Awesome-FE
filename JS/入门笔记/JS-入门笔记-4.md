@@ -124,11 +124,18 @@ js中基本的条件语句有`if/else`语句和`switch`语句
 ### if语句
 
 主要有3种形式
+- `if ...`
+- `if...else...`
+- `if...else if...else...`
+
+
+**`if ...`**
 ```
 if (exoression)
   statement;
 ```
 
+**`if...else...`**
 ```
 if (expression)
   statement1;
@@ -136,12 +143,138 @@ else
   statement2;
 ```
 
+**`if...else if...else...`**
 ```
 if (expression1)
   statement1;
 else if(expression2)
   statement2;
-...
 else
   statement3;
+```
+
+### switch语句
+
+如果所有的程序执行分支都依赖于同一个表达式时，if-else并不是最佳解决方案，而switch语句正适合处理这种情况
+
+```
+switch(n): {
+  case 1:
+    // 执行代码块1
+    break;
+  case 2:
+    // 执行代码块2
+    break;
+  case 3:
+    // 执行代码块3
+    break;
+  default:
+    // 执行代码块4
+    break;
+}
+```
+
+由于switch语句每次执行时候，不是所有的case表达式都能执行，因此，应当避免使用带有副作用的case表达式，
+最安全的做法是case中使用常量表达式
+
+## 循环语句
+js中有4中循环语句，`while`,`do/while`,`for`,`for/in`
+
+### while语句
+
+while 语句基本语法如下:   
+```
+while(expression)
+  statement
+```
+
+执行while之前，js解释器先计算expression值，如果值是假的，那么程序将跳过循环体中的逻辑。反之，js将执行循环体内的逻辑，
+然后再次计算表达式expression的值，这种循环会一直下去，直到expression值为假值为止。
+
+下面这个示例演示while循环输出0-9:     
+
+```
+var count = 0;
+while( count < 10 ){
+  console.log(count++);
+}
+```
+
+### do/while语句
+
+do/while语句和while语句非常接近，只不过检测循环表达式是在循环结束时候，也就说至少执行一次
+
+```
+do {
+  statement
+}while(expression)
+```
+
+下面是一个do/while循环的栗子：
+```
+var count = 0;
+do {
+  console.log(count++)
+}while(count<10)
+```
+
+### for语句
+
+大部分循环都有特定的计数变量，在循环开始之前，初始化这个变量，然后每次循环执行之前都检测一下他的值，最后，
+计数器变量做自增操作。
+
+在这类循环中，计数器的三个关键操作是：初始化、检测、更新
+
+for语句将这三步操作明确声明为循环语法一部分，各自使用一个表达式来表示。
+
+for语句的语法如下：
+```
+for(initialize; test; increment;){
+  statement
+}
+```
+
+initialize,test,increment三个表达式之间用分号分割，分别负责初始化操作，循环条件判断和计数器变量更新。
+
+for循环输出0-9的栗子：
+```
+for(var count=0; count<10;count++){
+  console.log(count);
+}
+```
+
+### for/in语句
+for/in语句和常规for循环完全不同。语法如下：
+```
+for(variable in object){
+  statement
+}
+```
+
+variable 通常是一个变量名，也可以是一个产生左值的表达式或者一个通过var语句声明的变量，总之必须是一个适合赋值
+表达式左侧的值。object是一个表达式，这个表达式计算结果是一个对象。
+
+for循环遍历数组元素是非常简单的，for/in循环更适合用来遍历对象属性成员
+
+```
+for(var p in o){
+  console.log(o[p])
+}
+```
+
+需要注意的是，只要for/in循环中，variable的值可以当作赋值表达式的左值，它可以是任意表达式。每次循环都会计算这个表达式，
+也就是说，每次循环他计算的值都有可能不同。
+
+例如，可以使用下面这段代码将所有对象属性复制到一个数组中
+```
+var o = {x:1,y:2};
+var a=[],i=0;
+for(a[i++] in o) ; /*empty*/
+```
+
+js数组不过是一种特殊的对象，因此，for/in循环可以像枚举对象属性一样，枚举数组索引。
+
+例如可以在上面代码之后加上这段代码，可以枚举数组的索引0,1,2：
+```
+for(i in a) console.log(i);
 ```
