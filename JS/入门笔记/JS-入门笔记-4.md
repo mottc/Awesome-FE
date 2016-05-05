@@ -278,3 +278,144 @@ js数组不过是一种特殊的对象，因此，for/in循环可以像枚举对
 ```
 for(i in a) console.log(i);
 ```
+
+其实，for/in循环并不会遍历对象的所有属性，只有可枚举的属性才会被遍历到。由js语言核心定义的内置方法就不是可枚举的.
+除了内置方法之外，还有很多内置对象的属性也是不可枚举的。
+
+代码中定义的所有属性和方法都是可枚举的。
+
+对象可以继承其他对象的属性，那些继承的自定义属性也可以使用for/in枚举出来
+
+**属性枚举的顺序：**    
+规范没有指定for/in循环按照何种顺序来枚举对象属性，实际上主流浏览器厂商的js实现是按照属性定义的先后顺序来枚举简单对象的属性：
+**先定义，先枚举**
+
+## 跳转语句
+
+js中有一类语句是跳转语句。从名字就能看出，这种语句就是使得js的执行可以从一个位置跳转到另一个位置。
+
+- break语句是跳转到循环或者其它语句的结束
+- continue语句是终止本次循环的执行并开始下一次循环的执行。
+- 跳转到语句标签位置
+- return语句让解释器跳出函数体执行，并提供本次调用的返回值
+- throw语句触发或者抛出一个异常，配合try/catch/finnally语句一同执行，跳转到最近的闭合异常处理程序
+
+### 标签语句
+语句是可以加标签的，标签由语句前的标示符和冒号组成` identifier: statement`
+
+通过给语句定义标签，就可以在程序的任何地方通过标签名引用这条语句。break和continue是js唯一可以使用语句标签
+的语句.      
+
+用作标签的identifier 必须是一个合法的js标识符，不能是保留字
+
+标签的命名空间和变量或函数的命名空间是不同的，因此可以使用同一个标示符作为语句标签和作为变量名或者函数名。
+
+一个语句标签不能和它内部的语句标签重名，但在两个代码段不互相嵌套时候，是可以出现同名语句标签。并且带有标签的语句
+还可以带有标签，任何语句都可以有多个标签
+
+比如下面这个栗子，while循环定义一个标签，continue使用这个标签:
+```
+mainloop: while(token != null ){
+  statement1;
+  continue mainloop; // 跳转到下一次循环
+  statement2;
+}
+```
+
+### break语句
+
+单独使用break语句的作用是立即退出最内层的循环或者switch语句。`break;`
+
+由于它能够使循环和switch语句退出，因此这种形式的break只有出现在这类语句中才是合法的。
+
+在switch中已经见过break的用法，在循环中，无论什么原因，只要不想执行整个循环，就可以使用break来退出
+
+例如下面这个栗子，找到了需要查找的数组元素，就使用break退出
+
+```
+for(var i=0; i<a.length; i++){
+  if(a[i] == target) break;
+}
+```
+
+js同样运行break后面跟一个语句标签：`break labelname;`
+
+当break和标签一块使用时候，程序跳转到标签所标示的语句块的结束，或者直接终止这个闭合语句块的执行。
+当没有任何语句块指定了break所用的标签，将会产生一个语法错误
+
+当使用带标签形式的break语句，带标签的语句不该是循环或者switch语句，因为break会跳出任何闭合的语句块。
+
+在break和labelname之间不能换行。因为js可以给语句自动补全省略掉分号，如果break关键字和标签之间有换行，
+js会认为你使用break不带标签的形式，会在break后补充分号
+
+当你希望通过break跳出非就近的循环体或者switch语句，就会用到带标签的break语句。比如下面这个栗子：
+```
+var matrix = getData() // 得到一个二维数组
+var sum=0, success = false;
+compute_sum: if(matrix) {
+  for(var x=0; x<matrix.length; x++){
+    var row = matrix[x];
+    if(!row) break compute_sum;
+    for(var y=0; y<row.length; y++){
+      var cell = row[y];
+      if(isNaN(cell)) break compute_sum;
+      sum += cell;
+    }
+  }
+}
+```
+最后，不管break语句带不带标签，他的控制权都无法越过函数边界。比如，对于一条带标签的函数定义语句来说，不能
+从函数内部通过这个标签跳转到函数外部
+
+### continue语句
+
+continue语句和break语句非常接近，但是不退出循环，而是执行下一次循环。
+
+continue语法非常简单:`continue`
+
+continue语句同样可以带有标签:`continue labelname`
+
+不管continue语句带不带标签，只能在循环体中使用，在其他地方使用，会报语法错误
+
+当执行到continue语句时候，当前循环逻辑就终止了，随即执行下一次循环，在不同类型循环中，continue行为也有些不同：
+- while循环，在循环开始处指定的expression会重复检测，如果检测结果为true，循环体从头开始执行
+- do/while循环，程序的执行直接跳到循环结尾处，这时会重新判断循环条件，之后再继续下一次循环
+- for循环中，首先计算自增表达式，然后再次检测test表达式，以判断是否继续执行循环
+- for/in语句中，循环开始访问下一个属性名，这个属性名赋给指定的变量
+
+需要注意的是，continue语句在while和for循环中差别，while循环直接进入下一轮的循环条件判断，但for
+循环首先计算自增表达式，然后判断循环条件。
+
+下面这个栗子，展示产生一个错误时候跳过当前循环后续的逻辑：
+```
+for(var i=0; i<data.length; i++){
+  if(!data[!]) continue;
+  total += data[i];
+}
+```
+
+和break语句类似，带标签的continue语句可以嵌套在循环中，用以跳出多层次嵌套循环体逻辑。同样的，在continue和labelname之间不能换行。
+
+### return 语句
+
+函数调用是一种表达式，而所有的表达式都有值。函数中的return语句就是用来指定函数调用后的返回值
+
+return语句的语法:`return expression`
+
+return语句只能在函数体内出现，如果不是将会报语法错误。当执行到return语句时，函数终止执行，返回expression的值
+
+举个栗子:
+```
+function square(x) { return x*x; }
+square(2)
+```
+
+如果没有return语句，则函数调用仅依次执行函数体内的每一条语句直到函数结束，最后返回调用程序。
+这种情况下，调用表达式的结果是undefined。
+
+return语句常作为最后一条语句出现，但不一定是放到函数最后，即使在执行return语句的时候后续还有很多代码
+没有执行，函数还是会返回调用程序
+
+return 语句可以单独使用而不必带有exoression，这样函数调用返回的也是undefined
+
+### throw语句
