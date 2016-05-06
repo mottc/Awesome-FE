@@ -44,8 +44,55 @@
 </head>
 ```
 `<title>`标签的内容“hello world”会在浏览器中的标题栏上显示出来，如下图所示   
-![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
+2. 页面关键字  
+基本语法：	`<meta name="keywords" content="输入具体的关键字"> `  
+举例：    	`<meta name="keywords" content="网页，学习">`  
+3. 页面描述    
+基本语法：`<meta name="description" content="设置页面描述"> `  
+举例：`<meta name=“description” content="这是为了学习而建的网站">`  
+4. 作者信息   
+基本语法：`<meta name="author" content="作者的姓名"> `  
+举例：`<meta name="author" content="***">`  
+5. 网页到期时间  
+基本语法：`<meta http-equiv="expires" content="过期时间">`   
+举例：`<meta http-equiv="expires" content="31 Dec 2018 24:00:00 GMT">`    
+说明: 必须使用GMT时间格式!
+6. 禁止读缓存调阅页面内容   
+当用户希望访问者每次访问都刷新网页广告的图标或每次都刷 新网页的计数器，就要禁用缓存了。  
+基本语法：`<meta http-equiv="pragma" content="no-cache"> `  
+7. 设置cookie过期  
+基本语法：`<meta http-equiv="set-cookie" content=“过期时间">`    
+举例：`<meta http-equiv=“set-cookie” content="31 Dec 2016 24:00:00 GMT">`  
+说明: 必须使用GMT时间格式!  
+8. 强制以独立页面打开  
+基本语法：`<meta http-equiv="window-target" content="_top">`    
+9. 定义网页文字及语言   
+基本语法：`<meta http-equiv="content-type" content="text/html; charset=字符集类型">`   
+举例：`<meta http-equiv="content-type" content="text/html; charset=utf-8">`     
+10. 定义网页的定时跳转  
+基本语法：`<meta http-equiv="refresh" content="跳转的时间;URL=跳转到的地址">`   
+举例：`<meta http-equiv="refresh" content="5;URL=http://www.google.com">`   
+11. 网页打开时或退出时的效果  
+基本语法：`<meta http-equiv="page-exit" content="revealtrans(duration=延迟时间(秒),transition=数字 (转换方式))">`    
+   &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;	&ensp;	  `<meta http-equiv="page-enter" content="revealtrans(duration=延迟时间(秒),transition=数字 (转换方式))">`  
+举例：`<meta http-equiv="page-exit" content="revealtrans(duration=10,transition=21)">`   
+ &ensp;&ensp;&ensp;&ensp; &ensp;  `<meta http-equiv="page-enter" content="revealtrans(duration=8,transition=12)">`   
 
+|效果|transition|效果|transition|
+|---|---|---|---|
+|盒状收缩| 0| 溶解| 12|
+|盒装展开|1 |左右向中部收缩| 13 |
+|圆形收缩|2 |中部向左右展开 |14 |
+|圆形展开| 3 |上下向中部收缩| 15|
+|向上擦除| 4 |中部向上下展开| 16|
+|向下擦除| 5 |阶梯状向左下展开| 17 |
+|向左擦除 |6 |阶梯状向左上展开| 18|
+|向右擦除 |7 |阶梯状向右下展开| 19|
+|垂直百叶窗| 8| 阶梯状向右上展开| 20|
+|水平百叶窗| 9| 随即水平线 |21 |
+|横向棋盘式| 10 |随即垂直线 |22|
+|纵向棋盘式| 11 |随即 |23|  
 ---
 ## **`<body>`标签，网页上显示的内容放在这里**
 在网页上要展示出来的页面内容一定要放在body标签中。如下图是一个新闻文章的网页。
@@ -98,7 +145,24 @@ h1-h6标签的默认样式：
 在网上商城中，某产品的打折后的价格是需要强调的。如下图。   
 ![](http://upload-images.jianshu.io/upload_images/1408656-ce861d99a21e0719.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
 代码实现:   
-![](http://upload-images.jianshu.io/upload_images/1408656-735181aa80e24e5c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
+![](http://upload-images.jianshu.io/upload_images/1408656-735181aa80e24e5c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)   
+ 
+---
+## **加入上标下标，使用`<sup>`和`<sub>`标签**  
+如果想在一段文字中加入上标或下标，就需要用到`<sup>`和`<sub>`标签。  
+* `<sup>`表示上标。  
+* `<sub>`表示下标。    
+
+
+语法：  
+`<sup>受影响的文字</sup>`  
+`<sub>受影响的文字</sub>`  
+栗子：  
+```
+<p>x<sub>1</sub>+y<sup>2</sup>=0</p>
+```  
+在浏览器中的显示效果：  
+![](http://i.imgur.com/VAQww9q.jpg)
 
 ---
 ## **使用`<span>`标签为文字设置单独样式**
@@ -411,6 +475,11 @@ title属性的作用，鼠标滑过链接文字时会显示这个属性的文本
 如下代码：  
 `<a href="目标网址" target="_blank">click here!</a>`  
 
+###**图像链接**  
+点击图片，跳到指定链接。  
+如下代码：  
+`<a  href="链接地址"> <img src="图像地址"> </a>`    
+
 ### **使用mailto在网页中链接Email地址**
 `<a>`标签还有一个作用是可以链接Email地址，使用mailto能让访问者便捷向网站管理者发送电子邮件。我们还可以利用mailto做许多其它事情。下面一一进行讲解，请看详细图示：  
 ![](http://upload-images.jianshu.io/upload_images/1408656-685c72c34b17aeaf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
@@ -556,13 +625,6 @@ title属性的作用，鼠标滑过链接文字时会显示这个属性的文本
 ![](http://upload-images.jianshu.io/upload_images/1408656-f16609edfb448272.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
 2. selected="selected"：设置selected="selected"属性，则该选项就被默认选中。
 
-### **使用下拉列表框进行多选**
-下拉列表也可以进行多选操作，在`<select>`标签中设置`multiple="multiple"`属性，就可以实现多选功能，在 widows 操作系统下，进行多选时按下Ctrl键同时进行单击（在 Mac下使用 Command +单击），可以选择多个选项。如下代码：  
-![](http://upload-images.jianshu.io/upload_images/1408656-cd50b0431454da5e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)   
-
-在浏览器中显示的结果：  
-![](http://upload-images.jianshu.io/upload_images/1408656-60cd462bb13e1634.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
 ### **使用提交按钮，提交数据**
 在表单中有两种按钮可以使用，分别为：提交按钮、重置。这一小节讲解提交按钮：当用户需要提交表单信息到服务器时，需要用到提交按钮。  
 语法： `<input   type="submit"   value="提交">`  
@@ -590,6 +652,35 @@ title属性的作用，鼠标滑过链接文字时会显示这个属性的文本
 ![](http://upload-images.jianshu.io/upload_images/1408656-f6126a98d4370c4d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)   
 单击重置按钮   
 ![](http://upload-images.jianshu.io/upload_images/1408656-453fb9f9e7fe4e7a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+***input标记中type类型***    
+  
+|值|描述|
+|---|---|
+|button|定义可点击按钮（多数情况下，用于通过JavaScript启动脚本）|
+|checkbox|定义复选框|
+|file|定义输入字段和"浏览"按钮，供文件上传|
+|hidden|定义隐藏的输入字段|
+|image|定义图像形式的提交按钮|
+|password|定义密码字段。该字段中的字符被掩码。|
+|radio|定义单选按钮。|
+|reset|定义重置按钮。重置按钮会清除表单中的所有数据。|
+|submit|定义提交按钮。提交按钮会把表单数据发送到服务器。 |
+|text|定义单行的输入字段，用户可在其中输入文本。默认宽度为20个字符。|   
+|email|用于应该包含 e-mail 地址的输入域|  
+|URL|用于应该包含 e-mail 地址的输入域|
+|number|用于应该包含数值的输入域,还能够设定对所接受的数字的限定|
+|range|包含一定范围内数字值的输入域,外观为一个滑动条|
+|date|选取日、月、年|
+|color|颜色选择器用于挑选色彩，外观为一个取色器|
+
+### **使用下拉列表框进行多选**
+下拉列表也可以进行多选操作，在`<select>`标签中设置`multiple="multiple"`属性，就可以实现多选功能，在 widows 操作系统下，进行多选时按下Ctrl键同时进行单击（在 Mac下使用 Command +单击），可以选择多个选项。如下代码：  
+![](http://upload-images.jianshu.io/upload_images/1408656-cd50b0431454da5e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)   
+
+在浏览器中显示的结果：  
+![](http://upload-images.jianshu.io/upload_images/1408656-60cd462bb13e1634.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
+
 
 ### **form表单中的label标签**
 小伙伴们，你们在前面学习表单各种控件的时候，有没有发现一个标签--label，这一小节就来揭晓它的作用。  
