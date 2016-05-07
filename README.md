@@ -12,10 +12,10 @@
 
 ## JS
 ### JS－入门笔记系列
-- [JS-入门笔记-1](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-1.md)
-- [JS-入门笔记-2](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-2.md)
-- [JS-入门笔记-3](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-3.md)
-- [JS-入门笔记-4](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-4.md)
+- [JS-入门笔记-1-介绍](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-1.md)
+- [JS-入门笔记-2-类型/值/变量](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-2.md)
+- [JS-入门笔记-3-表达式和运算符](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-3.md)
+- [JS-入门笔记-4-语句](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/JS-%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0-4.md)
 
 ### JS基础系列
 - [js保留关键字及危险变量名](https://github.com/ZhaoLion/Awesome-FE/blob/master/JS/%E5%9F%BA%E7%A1%80/js%E4%BF%9D%E7%95%99%E5%85%B3%E9%94%AE%E5%AD%97%E5%8F%8A%E5%8D%B1%E9%99%A9%E5%8F%98%E9%87%8F%E5%90%8D.md)
