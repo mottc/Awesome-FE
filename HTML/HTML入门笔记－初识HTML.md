@@ -45,7 +45,6 @@
 ```
 `<title>`标签的内容“hello world”会在浏览器中的标题栏上显示出来，如下图所示   
 ![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)    
-
 2. 页面关键字  
 基本语法：	`<meta name="keywords" content="输入具体的关键字"> `  
 举例：    	`<meta name="keywords" content="网页，学习">`    
