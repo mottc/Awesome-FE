@@ -529,3 +529,66 @@ with(o) x=1;
 `x = 1;`是一样的。它给一个或全局变量x赋值，或者创建全局变量的新属性x。
 
 **简单来说，就是with提供来读取o属性的快捷方式，但是不能创建o的属性**
+
+### debugger语句
+
+程序员经常需要打一些断点来查看程序是否在按照自己设计正确运行，debugger语句就是让js解释器以调试模式
+运行，来产生一个断点，js执行到断点位置，停止运行，这时可以使用调试器输出变量的值，检查程序调用栈等等。
+
+在ECMAScript5中，debugger语句正式加入语言，并且已经得到主流浏览器厂商的支持。
+
+debugger语句不会启动调试器，但如果调试器已经在运行，这条语句才会真正产生一个断点，例如在使用Chrome开发者工具
+中的命令行时，debugger语句才会正常工作
+
+### "use strict"
+`"use strict"` 是ECMAScript5中引入的一条指令。
+
+指令并不是语句，指令和语句有2个重要的区别：
+- 语句不包含任何语言的关键字，指令仅仅包含一个特殊字符串直接量表达式，对于没有实现ECMAScript5的js解释器来说，只是一条没有副作用的表达式语句，什么都没执行
+- 只能出现在脚本代码的开始或者函数体的开始、任何实体语句之前。在脚本或者函数体内第一条常规语句之后的字符串直接量表达式语句只当作普通的表达式语句对待，不会被当作指令解析
+
+使用"use strict"指令的目的是说明，后续的代码将被解析成严格代码。
+
+严格代码以严格模式执行。ECMAScript5的严格表达式是该语言的受限的子集，修正语言的重要缺陷，并且提供健壮的查错功能和增强的安全机制
+
+严格模式和非严格模式区别如下:(前3条非常重要)
+- 在严格模式中禁止使用with语句
+- 所有的变量都需要先声明，如果给一个未声明的变量、函数、函数参数、catch从句参数或全局变量的对象赋值，将会抛出一个引用错误异常（非严格模式，这种隐式声明的全局变量的方法是给全局对象新添加一个新属性）
+- 调用的函数（不是方法）中一个this值是undefined。（在非严格模式中，调用的函数中的this值总是全局对象。可以利用这种特性来判断js实现是否支持严格模式
+> `var hasStrictMode = (function(){ "use strict"; return this===undefined;});`
+
+- 在严格模式中，通过call()或apply()来调用函数时，其中的this值就是通过call()或apply()传入的第一个参数（非严格模式中，null和undefined值被全局对象和转换为对象的非对象值所代替）
+- 在严格模式中，给只读属性赋值和给不可扩展的对象创建新成员都将抛出一个类型错误异常(非严格模式，这些操作只是简单的失败，不会报错)
+- 在严格模式中，传入eval()的代码不能调用程序所在的上下文中声明变量或定义函数，而在非严格模式可以的。相反，变量和函数的定义是在eval()的新作用域中，这个作用域在eval()返回时就被弃用了
+- 在严格模式中，函数的arguments对象拥有传入函数值的静态副本。而非严格模式，arguments对象具有魔术般行为，arguments里的数组和函数参数都是指向同一个值的引用
+- 在严格模式中，当delete运算符后跟随非法的标示符时，将会抛出一个语法错误异常（非严格模式，这种delete表达式将什么都不会做，并返回false）
+- 在严格模式中，试图删除一个不可配置的属性将抛出一个类型错误异常（非严格模式，这种delete表达式操作失败，并返回false）
+- 在严格模式中，在一个对象直接量中定义两个或多个同名属性将产生一个语法错误（非严格模式中不会报错）
+- 在严格模式中，函数声明中存在两个或多个同名参数将会产生一个语法错误（在非严格模式中不会报错）
+- 在严格模式中，不允许使用八进制数直接量（以0为前缀，非严格模式中某些实现是允许八进制数直接量的）
+- 在严格模式中，标示符eval和arguments当作关键字，他们的值是不能更改的。不能给这些标识符赋值，也不能把它们声明为变量、用作函数名、用作函数参数或者catch块的标识符
+- 在严格模式中，限制了对调用栈的监测能力，arguments.caller和arguments.callee都会抛出一个类型错误异常。在严格模式的函数同样有caller和arguments属性，当访问这两个属性值都将抛出类型错误异常
+
+## js语句总结表
+| 语句       | 语法                                                         | 用途                                                                                      |
+|:-----------|:-------------------------------------------------------------|:------------------------------------------------------------------------------------------|
+| break      | break [label];                                               | 退出最内层循环或者退出switch语句，又或者退出label所指定的语句／switch语句中标记的一条语句 |
+| case       | case expression:                                             | 在switch中标记一条语句                                                                    |
+| continue   | continue [label];                                            | 重新开始最内层的循环或重新开始label指定的循环                                             |
+| debugger   | debugger;                                                    | 断点起调试                                                                                |
+| default    | default;                                                     | 在switch中标记默认的语句                                                                  |
+| do/while   | do statement while(expression);                              | while循环的一种替代形式                                                                   |
+| empty      | ;                                                            | 什么都不做                                                                                |
+| for        | for(init;test;incr)statement                                 | 一种简写的循环                                                                            |
+| for/in     | for(var in object) statement                                 | 遍历一个对象的属性                                                                        |
+| function   | function name([para[],...]){body}                            | 声明一个函数                                                                              |
+| if/else    | if(expr)statement1 [else statement2]                         | 执行statments1或者statements2                                                             |
+| label      | label:statement                                              | 给statement指定一个名字                                                                   |
+| return     | return [expression];                                         | 从函数返回值                                                                              |
+| switch     | switch(expr){statements}                                     | 用case或者'default:'语句标记多分支语句                                                    |
+| throw      | throw expression;                                            | 抛出异常                                                                                  |
+| try        | try {statements} [catch {statements}] [finally {statements}] | 捕获异常                                                                                  |
+| use strict | "use strict"                                                 | 对脚本和函数应用严格模式                                                                  |
+| var        | var name = [expr][,...];                                     | 声明并初始化一个或多个变量                                                                |
+| while      | while(expr) statements                                       | 基本的循环结构                                                                            |
+| with       | with(object) statements                                      | 扩展作用域链                                                                              |
