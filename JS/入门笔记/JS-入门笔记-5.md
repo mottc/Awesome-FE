@@ -186,4 +186,132 @@ new_circle.r = 2; // 修改new_circle继承来的属性的值，只修改自身
 raw_circle.r; // => 1 ,原型的值并没有改变
 ```
 
-### 属性访问错误
+## 属性访问错误
+查询一个不存在的属性并不会报错，如果对象自身的属性和继承的属性中均没有，则会返回undefined。
+
+但是如果对象不存在，试图查询这个不存在的对象的属性就会报错。null和undefined都没有属性，因此查询这些值的属性会报错
+
+下面提供2种避免出错的方法：
+```
+// 简单的方法
+var len = undefined;
+if(book){
+  if(book.title) len = book.title.length;
+}
+// 更为灵活的方法
+var len = book && book.title && book.title.length; // &&短路行为
+```
+
+给null和undefined设置属性会报类型错误
+
+给其他值设置属性不会全部成功，有一部分属性是只读的，不能重新赋值，有一些对象不能新增属性，但是这些设置属性的失败操作不会报错。但在ECMAScript5的严格模式下会报异常
+```
+Object.prototype = o; // 失败，Object.prototype没有被修改
+```
+
+总之，下面场景中给对象o设置属性p会失败：
+- o的属性是只读的，不能给只读的属性重新赋值
+- o中的属性p是继承属性，且它是只读的，不能通过同名自有属性覆盖只读的继承属性
+- o中不存在自有属性p：o没有使用setter方法继承属性p，并且o的可扩展性是false。如果o中不存在p，且没有setter方法可以调用，则p一定会添加到o中，但如果o不是可扩展的，那么在o中不能定义新属性
+
+## 删除属性
+delete运算符可以删除对象的属性。但是，delete只是断开属性和宿主对象的联系，不是删除这个属性。因此，在销毁对象的时候，要遍历属性中的属性，依次删除
+```
+a = { p: {x:1}}; //
+b = a.p; // b是对a的属性p的一个引用
+delete a.p; // 删除a的属性p
+b.x; // => 1，已经删除的属性p的引用仍然存在
+```
+
+delete运算符只能删除自有属性，不能删除继承属性。
+
+当delete表达式删除成功后并且没有副作用，返回true。如果delete后面不是一个属性访问表达式，同样返回true
+```
+o = {x:1};
+delete o.x; // 删除x，true
+delete o.x; // 删除失败，什么都不做，返回true
+delete o.toString(); // 无法删除，返回true
+delete 1; // 无意义，返回true
+```
+
+delete 可以删除不可扩展对象的可配置属性，但不能删除可配置性为false的属性。在严格模式中，删除一个不可配置的属性会报一个类型错误。
+在非严格模式下，这些情况delete操作会失败并返回false:
+```
+delete Object.prototype; // 不能删除，属性不可配置
+var x=1; // 声明一个全局变量
+delete this.x; // 不能删除这个属性
+function f(){}; // 声明一个全局函数
+delete this.f; // 也不能删除全局函数
+```
+
+当在非严格模式中删除全局对象的可配置属性时，可以省略对全局对象的引用，直接delete后面跟要删除的属性名即可：
+```
+this.x = 1;
+delete x;
+```
+
+在严格模式中，delete后跟随一个非法的操作数，将会报一个语法错误。必须显式的指定对象及其属性。
+```
+delete x; // 严格模式下报语法错误
+delete this.x; // 正常
+```
+
+## 检测属性
+
+我们经常需要判断一个属性是否存在某个对象中。
+- in运算符
+- hasOwnPreperty()
+- propertyIsEnumerable()
+
+in运算符左侧是属性名，右侧是对象，如果对象的自有属性或继承属性包含这个属性，返回true
+```
+var o = {x:1};
+"x" in o; // true，“x”是o的属性
+"y" in o; // false， 'y'不是o的属性
+"toString" in o; // true，o继承toString属性
+```
+
+对象的hasOwnPreperty()方法用来检测给的的名字是否是对象的自有属性。对于继承属性返回false
+```
+var o = {x:1};
+o.hasOwnPreperty("x"); // true,o有一个自有属性x
+o.hasOwnPreperty("y"); // false，o没有属性y
+o.hasOwnPreperty("toString"); // false，toString是继承的属性
+```
+
+propertyIsEnumerable()是hasOwnPreperty()的增强版，只有检测到是自有属性且这个属性的可枚举性为true时，才会返回true。
+某些内置属性是不可枚举的。通常js代码创建的属性都是可枚举的，除非在ECMAScript5中使用一个特殊的方法来改变属性的可枚举性。
+```
+var o =inheritPrototype({y:2});
+o.x = 1;
+o.propertyIsEnumerable("x"); // true，o有一个可枚举的属性x
+o.propertyIsEnumerable("y"); // false，y属性是继承来的
+object.prototype.propertyIsEnumerable("toString"); // false， 不可枚举的
+```
+
+除了使用in运算符之外，另一种更简便的方法是使用`!==`判断一个属性是否是undefined:
+```
+var o = {x:1};
+o.x !== undefined; // true，o中有属性x
+o.y !== undefined; // false，y属性没有
+o.toString !== undefined; // true，o继承了toString
+```
+
+然后有一种情况，只能用in运算符，不能使用上述属性访问表达式。in运算符可以区分不存在的属性和存在但值为undefined的属性。
+```
+var o = {x:undefined};
+o.x !== undefined; // false,属性存在，但是值为undefined
+o.y !== undefined; // false，属性不存在
+"x" in o; // true，属性存在
+"y" in o; // false，属性不存在
+delete o.x; // 删除属性x
+"x" in o; // 属性x不存在
+```
+注意，上面使用的是`!==`而不是`!=`,`!==`可以区分undefined和null。有时不需要进行区分：
+```
+// 如果o中含有属性x，且x值不是null或undefined
+if (o.x != null) o.x += 2;
+// 如果o中含有属性x，且x的值不能转换成false，乘以2
+// 如果x是undefined、null、false、" "、0 或者NaN，则保持不变
+if (o.x) o.x *= 2;
+```
