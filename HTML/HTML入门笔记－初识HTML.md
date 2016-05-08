@@ -37,7 +37,7 @@
 ```
 
 1. `<title>`标签  
-在`<title>` 和`<title>` 标签之间的文字内容是网页的标题信息，它会出现在浏览器的标题栏中。网页的title标签用于告诉用户和搜索引擎这个网页的主要内容是什么，搜索引擎可以通过网页标题，迅速的判断出网页的主题。每个网页的内容都是不同的，每个网页都应该有一个独一无二的title。
+在`<title>` 和`<title>` 标签之间的文字内容是网页的标题信息，它会出现在浏览器的标题栏中。网页的title标签用于告诉用户和搜索引擎这个网页的主要内容是什么，搜索引擎可以通过网页标题，迅速的判断出网页的主题。每个网页的内容都是不同的，每个网页都应该有一个独一无二的title。  
 例如:
    ```  
 <head>
@@ -89,7 +89,7 @@
 举例：`<meta http-equiv="page-exit" content="revealtrans(duration=10,transition=21)">`   
  &ensp;&ensp;&ensp;&ensp; &ensp;  `<meta http-equiv="page-enter" content="revealtrans(duration=8,transition=12)">`   
 
-|效果|transition|效果|transition|
+  |效果|transition|效果|transition|
 |---|---|---|---|
 |盒状收缩| 0| 溶解| 12|
 |盒装展开|1 |左右向中部收缩| 13 |
