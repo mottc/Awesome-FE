@@ -22,6 +22,7 @@
 
 语法：
 `<!--注释文字 -->`
+
 ---
 ## **认识标签`<head>`**
 文档的头部描述了文档的各种属性和信息，包括文档的标题等。绝大多数文档头部包含的数据都不会真正作为内容显示给读者。  
@@ -44,7 +45,8 @@
 </head>
 ```
 `<title>`标签的内容“hello world”会在浏览器中的标题栏上显示出来，如下图所示   
-![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)    
+![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)   
+ 
 2. 页面关键字  
 基本语法：	`<meta name="keywords" content="输入具体的关键字"> `  
 举例：    	`<meta name="keywords" content="网页，学习">`    
@@ -102,6 +104,7 @@
 |水平百叶窗| 9| 随即水平线 |21 |
 |横向棋盘式| 10 |随即垂直线 |22|
 |纵向棋盘式| 11 |随即 |23|  
+
 ---
 ## **`<body>`标签，网页上显示的内容放在这里**
 在网页上要展示出来的页面内容一定要放在body标签中。如下图是一个新闻文章的网页。
