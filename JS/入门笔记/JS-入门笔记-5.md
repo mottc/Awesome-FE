@@ -315,3 +315,90 @@ if (o.x != null) o.x += 2;
 // 如果x是undefined、null、false、" "、0 或者NaN，则保持不变
 if (o.x) o.x *= 2;
 ```
+
+## 枚举属性
+除了检测对象的属性是否存在，还经常需要遍历对象的属性。通常使用for/in循环遍历
+
+for/in循环可以遍历对象中所有可枚举的属性（包括自身和继承的属性）
+
+一般来说，对象继承的内置方法是不可枚举的，还有通过Object.defineProperty(obj,property,enumerable:false)来定义不可枚举的属性
+```
+var o = { x:1, y:2}; // 2个可枚举的属性
+o.propertyIsEnumerable("toString"); // false 继承的方法，不可枚举
+for(p in o){
+  console.log(p)  // 输出x,y，不会输出toString
+}
+```
+
+很多时候给对象添加新的方法或属性，但是会被for/in枚举，因此需要跳过继承的属性和跳过方法，来避免在for/in中被循环枚举出来
+```
+for(p in o){
+  if(!o.hasOwnPreperty(p)) continue;
+}
+for(p in o){
+  if(typeof o[p] === "function") continue;
+}
+```
+
+除了for/in循环之外，ECMAScript5定义了2个用来枚举属性名称的函数
+- Object.keys()，返回一个数组，数组由对象中可枚举的自有属性的名称组成
+- Object.getOwnPropertyNames()，与keys相似，但是它返回所有自有属性的名称，而不仅仅是可枚举的属性
+
+## 属性getter和setter
+对象属性是由名字、值和一组特性(attribute) 构成的。
+
+在ECMAScript5中，属性可以用1-2个方法替代，这两个方法就是getter和setter。
+
+由getter和setter定义的属性称作“存取器属性”(access property)，与“数据属性”不同，数据属性只有一个简单的值。
+
+当程序查询存取器属性的值时，js调用getter方法（无参数），这个方法返回值就是属性存取表达式的值。
+当程序设置一个存取器属性的值时，js调用setter方法，将赋值表达式右侧的值当作参数传入setter。可以忽略setter方法的返回值。
+
+和数据属性不同，存取器属性不具有可写性(writable attribute)。如果属性同时具有getter和setter方法，那么是一个读/写属性，
+如果它只有getter方法，那么它是一个只读属性；如果它只有setter方法，那么它是一个只写属性，读取只写属性，只会返回undefined
+
+定义存取器最简单的方法如下：
+```
+var o = {
+  // 普通的数据属性
+  data_prop: value;
+
+  // 存取器都是成对定义的函数
+get accessor_prop() { /* function body */ }
+set accessor_prop(value) { /* function body */ }
+}
+```
+
+注意，存取器属性定义为1个或者2个和属性同名的函数，但是没有使用function，而是使用get和set。
+
+来看个例子：表示2D笛卡尔坐标系的对象
+```
+var p = {
+  // 2个普通的读写属性
+  x: 1.0,
+  y: 1.0,
+
+  // r是可读写的存取器属性，有getter和setter
+  // 函数体结束后，不要忘记加逗号
+  get r() { return Math.sqrt(this.x*this.x + this.y*this.y); }
+  set r(newvalue) {
+    var oldvalue = Math.sqrt(this.x*this.x + this.y*this.y);
+    var ratio = newvalue/oldvalue;
+    this.x *= ratio;
+    this.y *= ratio;
+  }
+
+  // theta是只读存取器，只有getter
+  get theta() { return Math.atan2(this.y, this.x); }
+}
+```
+注意，在这段代码中，getter和setter中this关键字的用法。js把这些函数当作对象的方法来调用，也就说，在函数体内的this指向表示这个点的对象，
+因此，r属性的getter方法可以通过this.x和this.y引用x和y的属性。
+
+和数据属性一样，存取起属性是可以继承的，因此可以将上述代码的对象p当在另一个点的原型。可以给新对象定义它的x和y属性，但r和theta属性是继承的：
+```
+var q = inheritPrototype(p); // 创建一个继承getter和setter的新对象
+q.x = 1, q.y = 2; // 给q添加2个属性
+console.log(q.r); // 可以使用继承的存取器属性
+console.log(q.theta);
+```
