@@ -402,3 +402,216 @@ q.x = 1, q.y = 2; // 给q添加2个属性
 console.log(q.r); // 可以使用继承的存取器属性
 console.log(q.theta);
 ```
+
+## 属性的特性
+属性除了名字和值之外，属性还包含一些标识：可写、可枚举和可配置的特性。
+
+ECMAScript5查询和设置属性的API：
+- 原型对象添加方法，设置成不可枚举的，更像内置方法
+- 给对象定义不能修改或删除的属性，锁定这个对象
+
+一个属性包含一个名字和四个特性，分别是：
+- 它的值（value）
+- 可写性（writable）
+- 可举性（enumerable）
+- 可配置性（configurable）
+
+存取器属性不具有值（value）特性和可写性，它们的可写性是由setter方法是否存在决定。因此存取器属性的4个特性是读取（get）、写入（set）、可举性和可配置性。
+
+为了实现属性特性的查询和设置操作，ECMAScript5定义了一个“属性描述符”的对象，这个对象代表了4个属性。
+
+数据属性的描述符对象的属性有：
+- value
+- writable
+- enumerable
+- configurable
+
+存取器属性的描述符对象用set和get属性代替value和writable。
+
+通过调用Object,getOwnPropertyDescriptor()可以获得某个对象特定属性的属性描述符：
+```
+// 返回 { value:1, writable:true, enumerable:true, configurable:true }
+Object.getOwnPropertyDescriptor({ x:1 },"x");
+// 查询上文中定义的random对象的octet属性
+// 返回 { get: /*func*/, set:undefined, enumerable:true, configurable:true }
+Object.getOwnPropertyDescriptor(random, 'octet');
+// 对于继承属性和不存在的属性，返回undefined
+Object.getOwnPropertyDescriptor({}, 'x');
+Object.getOwnPropertyDescriptor({}, 'toString');
+```
+
+从名字就可以看出，Object,getOwnPropertyDescriptor()只能得到自有属性的描述符。
+要想获得继承属性的特性，需要遍历原型链(使用Object.getPrototypeOf())
+
+要想设置属性的特性，或者想让新建属性具有某种特性，可以调用Object.defineProperty()，传入修改的对象、要修改或创建的属性名称以及属性描述符对象：
+```
+var o={};
+// 添加一个不可枚举的数据属性x，赋值为1
+Object.defineProperty(o, "x",
+  { value: 1,
+    writable: true,
+    enumerable: false,
+    configurable: true
+    });
+// 属性是存在的，但不可以枚举
+o.x; // =>1
+Object.keys(o); // []，不可枚举
+// 现在对属性x修改，变成制度属性
+Object.defineProperty(o, "x",
+  {
+    writable: false
+    });
+// 试图更改这个属性的值
+o.x = 2; // 操作失败，但是不报错，但是在严格模式中抛出类型错误异常
+o.x; // => 1
+// 属性依然可以配置，因此可以通过这种方式对它修改：
+Object.defineProperty(o, "x",
+  {
+    value: 2
+    });
+// 返回的值变为2
+o.x // =>2
+Object.defineProperty(o, "x",
+  {
+    get:function() { return 0;}
+    });
+o.x; // => 0 现在将x从数据属性修改为存取器属性
+```
+
+传入Object.defineProperty()的属性描述符对象不必包含所有4个特性。
+对于新创建的属性，默认的特性值是false或undefined。对于修改的已有属性来说，默认特性值没有任何修改。另外，这个方法要么修改已有属性，要么新建自有属性，但不会修改继承属性
+
+如果同时修改或创建多个属性，则需要使用Object.defineProperties()。第一个参数是要修改的对象，第二个参数是一个映射表，要包含新建的活修改的属性的名称，以及它们的属性描述符：
+```
+var p = Object.defineProperties({}, {
+    x: { value: 1, writable: true, enumerable: true, configurable: true},
+    y: { value: 1,writable: true, enumerable: true, configurable: true},
+    r: {
+        get: function() { return Math.sqrt(this.x*this.x + this.y*this.y)},
+        enumerable: true,
+        configurable true
+    }
+  });
+```
+
+这段代码从一个空对象开始，给它添加两个数据属性和一个只读存取器属性。最终Object.defineProperties()返回修改的对象
+和Object.defineProperty()一样
+
+对于那些不允许创建或修改的属性，如果用Object.defineProperty()和Object.defineProperties()对其操作（新建或修改）
+就会抛出类型错误异常。比如，给一个不可扩展的对象新增属性就会抛出类型错误异常。
+
+可写性控制着对值特性的修改，可配置性控制着对其它值特性的修改。
+
+如果属性是可配置的，则可以修改不可写属性的值。同样的，如果属性是不可配置的，仍然可以将可写属性修改为不可写属性。
+
+下面是修改的规则，违反规则的使用都会抛出类型错误异常：
+- 如果对象是不可扩展的，则可以编辑已有属性，但不能添加新属性（preventExtensions()阻止扩展）
+- 如果属性是不可配置的，则不能修改它的可配置性和可枚举性
+- 如果存取器属性是不可配置，则不能修改getter和setter的方法，也不能转换成数据属性
+- 如果数据属性是不可配置的，则不能将它转换成存取器属性
+- 如果数据属性是不可配置的，则不能将它的可写性从false修改为true，但可以从true修改成false
+- 如果数据属性是不可配置且不可写的，则不能修改它的值，然而可配置但不可写属性是可以修改的（实际上先将它标记为可写的，然后修改它的值，最后转换为不可写）
+
+下面这个方法，不仅将一个对象的属性复制到另一个对象中，而且复制了属性的特性。
+```
+Object.defineProperty(Object.prototype,
+  "extend", // 定义 Object.prototype.extend
+  {
+    writable: true,
+    enumerable: false, // false,定义为不可枚举的
+    configurable: true,
+    value: function(o){ // 值就是这个函数
+      // 得到所有的自有属性，包括不可枚举属性
+      var names = Object.getOwnPropertyNames(o);
+      // 遍历它们
+      for(var i=0; i<names.length; i++){
+        // 如果属性已经存在，则跳过
+        if(names[i] in this) continue;
+        // 获得o中属性的描述符
+        var desc = Object.getOwnPropertyDescriptor(o, names[i]]);
+        // 用它给this创建一个属性
+        Object.defineProperty(this, names[i], desc)
+      }
+    }
+    });
+```
+
+## 对象的三个属性
+每一个对象都有与之相关的原型(prototype)、类(class)和可扩展性(extensible)
+
+### 原型属性
+对象的原型属性是用来继承属性。
+
+原型属性是在实例对象创建之前就设置好的，通过对象直接量创建的对象使用Object.prototype作为它们的原型。
+通过new创建的对象使用构造函数的prototype属性作为它的原型。通过Object.create()创建的对象使用第一个参数（也可以是null）作为它们的原型。
+
+在ECMAScript5中，将对象作为参数传入Object.getPrototypeOf()可以查询它的原型。
+
+通过new表达式创建的对象，通常继承一个constructor属性，这个属性指代创建这个对象的构造函数。
+
+通过对象直接量或Object.create()创建的对象包含一个名为constructor的属性，这个属性指代Object()构造函数。
+
+因此，constructor.prototype才是对象直接量的真正的原型，但是通过Object.create()创建的对象往往不是这样
+
+要想检测一个对象是否是另一个对象的原型（或处于原型链中），可以使用isPrototypeOf()方法。
+```
+var p = { x:1 }; // 定义一个原型对象
+var o = Object.create(p); // 使用这个原型创建一个对象
+p.isPrototypeOf(o); // true，o继承自p
+Object.prototype.isPrototypeOf(p); // true，p继承自Object.prototype
+```
+
+### 类属性
+对象的类属性是一个字符串，用以标识对象的类型信息，有一个间接的toString()方法，返回如下这种格式的字符串`[object class]`
+
+要想获得对象的类，可以调用对的toString()方法，然后提取返回字符串串的第8个到倒数第2个位置之间的字符。为了能够调用正确的toString()
+版本，必须间接的调用Function.call()方法。
+
+下面栗子返回了传递给他的任意对象的类
+```
+function classof(o){
+  if(o === null) return "NULL";
+  if(o === undefined) return "Undefined";
+  return Object.prototype.toString.call(o).slice(8,-1)
+}
+```
+
+classof()函数可以传入任何类型的参数。数字、字符串和布尔值可以直接调用toString(),就和对象toString()方法一样。
+
+通过对象直接量和Object.create创建的对象的类属性是“Object”，那些自定义的构造函数创建的对象也是一样，类属性也是"Object",
+因此没办法通过类属性来区分对象的类
+```
+classof(null) // => "NULL"
+classof(1) // => "Number"
+classof("") // => "String"
+classof(false) // => "Boolean"
+classof({}) // => "Object"
+classof([]) // => "Array"
+classof(/./) // => "Regexp"
+classof(new Date()) // => "Date"
+classof(window) // => "Window"
+function f() {}; // => "定义一个自定义构造函数"
+classof(new f()); // => "Object"
+```
+
+### 可扩展性
+
+对象的可扩展性用以表示是否给剋有给对象添加新的属性。
+
+所有的内置对象和自定义对象都是显式可扩展的，宿主对象的可扩展性是由js引擎定义的。
+
+在ECMAScript5中，所有的内置对象和自定义对象都是可扩展的，除非呗转换成不可扩展的。
+
+可扩展性的目的是将对象“锁定”，以避免外界的干扰。对象的可扩展性通车和属性的可配值性和可写性配合使用
+
+ECMAScript5定义了用来查询和设置对象可扩展性的函数。
+- 通过将对象传入Object.esExtensible()，来判断对象是否是可扩展的。
+- 通过将preventExtensions()只影响对象本身的可扩展性。将对象作为参数传进去，一旦将对象转换为不可扩展的，就无法转换成可扩展的。如果给一个不可扩展的对象的原型添加属性，这个不可扩展的对象同样会继承这些新属性
+- Object.seal()和Object.preventExtensions()类似，除了能够将对象设置为不可扩展性，还可以将对象的所有自有属性都设置为不可配置的，也就是说，不能给这个对象添加新属性，而且它已有的属性也不能删除或配置，不过已有的可写属性依然可以是设置。对于那些已经封闭的（sealed）起来的对象是不能解封的。可以使用Object.isSealed()来检测对象是否封闭
+- Object.freeze()将更严格的锁定对象，将对象设置成不可扩展的和属性设置成不可配置的之外，还可以将它自有的所有数据属性设置成只读的(如果对象的存取器属性有setter方法，存取器属性不受影响，仍可以通过属性赋值调用)。使用Object.isFrozen()来检测对象是否冻结。
+
+Object.preventExtensions()、Object.seal()和Object.freeze()都返回传入的对象，也就是说可以通过函数嵌套的方式调用他们：
+```
+// 创建一个封闭对象，包括一个冻结的原型和一个不可枚举的属性
+var o = Object.seal(Object.create(Object.freeze({x:1}),{y:{value:2, writable: true}}));
+```
