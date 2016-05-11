@@ -615,3 +615,58 @@ Object.preventExtensions()、Object.seal()和Object.freeze()都返回传入的�
 // 创建一个封闭对象，包括一个冻结的原型和一个不可枚举的属性
 var o = Object.seal(Object.create(Object.freeze({x:1}),{y:{value:2, writable: true}}));
 ```
+
+## 序列化对象
+对象序列化是指将对象的状态转换为字符串，也可以将字符串还原为对象。
+
+ECMAScript5提供内置函数JSON.stringfy()和JSON.parese()用来序列化和还原js对象。
+
+这些方法使用JSON作为数据交换格式，JSON的语法和js对象和数组直接量的语法非常接近
+
+```
+o = { x:1, y: { z: [false,null,""]}}; // 定义一个测试对象
+s = JSON.stringfy(o); // s是 '{"x":1, "y":{"z":[false,null,""]}}'
+p = JSON.parse(s); // p 是 o 的深拷贝
+```
+
+JSON的语法是js语法的子集，并不能表示js里的所有值。
+
+支持对象、数组、数组、字符串、无穷大数字、true、false和null，并且他们可以序列化和还原。
+
+NaN、Infinity和-Infinity序列化的结果是null，日期对象序列化的结果是ISO格式的日期字符串，但JSON.parse()依然保留它们的字符串形态，
+而不会将它们还原成原始日期对象。函数、RegExp、Error对象和undefined值不能序列化和欢原
+
+JSON.stringfy()只能序列化对象可枚举的自有属性，对于一个不能序列化的属性来说，在序列化后的输出字符串中会将这个属性省略掉。
+
+## 对象方法
+所有的js对象都从Object.prototype继承属性。
+
+下面说几个最常用的方法
+
+### toString()方法
+toString()方法没有参数，将返回一个调用这个方法的对象对象值的字符串。在需要将对象转换为字符串的时候，js都会调用这个方法。
+
+默认的toString()方法的返回值带有的信息量很少，例如下面这行代码的计算结果为字符串：
+```
+var s = { x:1, y:1}.toString(); // => [object object]
+```
+
+由于默认的toString()方法并不会输出很多有用的信息，因此很多类都带有自定义的toString()。
+
+### toLocaleString()方法
+
+除了基本的toString()方法之外，对象都包含toLocaleString()方法，这个方法返回一个表示这个对象的本地化字符串。
+
+Object中默认的toLocaleString()方法并不做任何本地化自身的操作，仅调用toString()方法并返回对应值。
+
+Date和Number类对toLocaleString()方法做了定制，可以用它对数字、日期和实际本地化的转换
+
+Array类的toLocaleString方法和toString方法很像，唯一的不同是每个数组元素会调用toLocaleString()方法转换为字符串，而不是调用给各自的toString
+
+### toJSON()方法
+Object.prototype实际上没有定义toJSON()方法，但对于需要执行序列化的对象来说，JSON.stringfy()方法会调用toJSON()方法，
+如果在待序列化的对象中存在这个方法，则调用它，返回值是序列化的结果，而不是原始对象。
+
+### valueOf()方法
+valueOf()方法和toString()方法非常类似，但往往当js需要将对象转换成某种原始值而非字符串对象的时候才会调用，尤其是转换成数字的时候。
+如果在需要使用原始值的上下文中使用了对象，js会自动调用这个方法
