@@ -1,16 +1,22 @@
 # 对象
 
-对象(object)是js的基本数据类型。是一种复合值：将很多值（原始值或者其它对象）聚合在一起，可以通过名字访问这些值。
+对象(object)是js的基本数据类型。是一种复合值：将很多值（原始值或者其它对象）聚合在一起，可以通过名字访问这些值。   
+
 每个属性都是一个名/值对(key/value)，属性名是字符串，因此我们可以把对象看成从字符串到值的映射。
+
 然而对象不仅仅是字符串到值的映射，除了保持自有的属性，js对象还可以从一个称为原型的对象继承属性。
+
 对象的方法通常是继承的属性，这种原型式继承是js的核心特征。
 
 js对象是动态的，可以新增属性，也可以删除属性。
 
 除了字符串、数字、true、false、null和undefined之外，js中的值都是对象。
 
-对象是可变的，我们通过引用而非值来操作对象。如果变量x是指向一个对象的引用，那么执行代码
-`var y = x;`变量y也是指向同一个对象的引用，而非这个对象的副本。通过y来修改这个对象也会对变量x造成影响
+对象是可变的，我们通过引用而非值来操作对象。如果变量x是指向一个对象的引用，那么执行代码    
+
+`var y = x;`
+
+变量y也是指向同一个对象的引用，而非这个对象的副本。通过y来修改这个对象也会对变量x造成影响
 
 js的属性，除了名字和值之外，每个属性还有一些与之相关的值，称为 **属性特性**：
 - 可写，表明是否可以设置该属性的值
@@ -514,25 +520,31 @@ var p = Object.defineProperties({}, {
 
 下面这个方法，不仅将一个对象的属性复制到另一个对象中，而且复制了属性的特性。
 ```
+/* 给Object.prototype添加一个不可枚举的extend()方法
+ * 这个方法继承自调用它的对象
+ * 将作为参数传入的对象的属性一一复制
+ * 除了值之外，也复制属性的所有特性，除非在目标对象中存在同名属性
+ * 参数对象的所有自有对象（包括不可枚举的属性）也会一一复制
+
 Object.defineProperty(Object.prototype,
   "extend", // 定义 Object.prototype.extend
   {
     writable: true,
     enumerable: false, // false,定义为不可枚举的
     configurable: true,
-    value: function(o){ // 值就是这个函数
-      // 得到所有的自有属性，包括不可枚举属性
-      var names = Object.getOwnPropertyNames(o);
-      // 遍历它们
-      for(var i=0; i<names.length; i++){
-        // 如果属性已经存在，则跳过
-        if(names[i] in this) continue;
-        // 获得o中属性的描述符
-        var desc = Object.getOwnPropertyDescriptor(o, names[i]]);
-        // 用它给this创建一个属性
-        Object.defineProperty(this, names[i], desc)
+      value: function(o){ // 值就是这个函数
+        // 得到所有的自有属性，包括不可枚举属性
+        var names = Object.getOwnPropertyNames(o);
+        // 遍历它们
+        for(var i=0; i<names.length; i++){
+          // 如果属性已经存在，则跳过
+          if(names[i] in this) continue;
+          // 获得o中属性的描述符
+          var desc = Object.getOwnPropertyDescriptor(o, names[i]]);
+          // 用它给this创建一个属性
+          Object.defineProperty(this, names[i], desc)
+        }
       }
-    }
     });
 ```
 
