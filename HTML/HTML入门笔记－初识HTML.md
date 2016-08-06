@@ -22,6 +22,7 @@
 
 语法：
 `<!--注释文字 -->`
+
 ---
 ## **认识标签`<head>`**
 文档的头部描述了文档的各种属性和信息，包括文档的标题等。绝大多数文档头部包含的数据都不会真正作为内容显示给读者。  
@@ -37,49 +38,58 @@
 
 1. `<title>`标签  
 在`<title>` 和`<title>` 标签之间的文字内容是网页的标题信息，它会出现在浏览器的标题栏中。网页的title标签用于告诉用户和搜索引擎这个网页的主要内容是什么，搜索引擎可以通过网页标题，迅速的判断出网页的主题。每个网页的内容都是不同的，每个网页都应该有一个独一无二的title。  
-例如：
-```
+例如:
+   ```  
 <head>
     <title>hello world</title>
 </head>
-```
-`<title>`标签的内容“hello world”会在浏览器中的标题栏上显示出来，如下图所示   
-![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)  
+   ```
+`<title>`标签的内容“hello world”会在浏览器中的标题栏上显示出来，如下图所示  
+![](http://upload-images.jianshu.io/upload_images/1408656-2543f4a7f84fbdec.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 2. 页面关键字  
 基本语法：	`<meta name="keywords" content="输入具体的关键字"> `  
-举例：    	`<meta name="keywords" content="网页，学习">`  
+举例：    	`<meta name="keywords" content="网页，学习">`    
+
 3. 页面描述    
 基本语法：`<meta name="description" content="设置页面描述"> `  
-举例：`<meta name=“description” content="这是为了学习而建的网站">`  
+举例：`<meta name=“description” content="这是为了学习而建的网站">`    
+
 4. 作者信息   
 基本语法：`<meta name="author" content="作者的姓名"> `  
-举例：`<meta name="author" content="***">`  
+举例：`<meta name="author" content="***">`    
+
 5. 网页到期时间  
 基本语法：`<meta http-equiv="expires" content="过期时间">`   
 举例：`<meta http-equiv="expires" content="31 Dec 2018 24:00:00 GMT">`    
-说明: 必须使用GMT时间格式!
+说明: 必须使用GMT时间格式!  
+
 6. 禁止读缓存调阅页面内容   
 当用户希望访问者每次访问都刷新网页广告的图标或每次都刷 新网页的计数器，就要禁用缓存了。  
-基本语法：`<meta http-equiv="pragma" content="no-cache"> `  
+基本语法：`<meta http-equiv="pragma" content="no-cache"> `    
+
 7. 设置cookie过期  
 基本语法：`<meta http-equiv="set-cookie" content=“过期时间">`    
 举例：`<meta http-equiv=“set-cookie” content="31 Dec 2016 24:00:00 GMT">`  
-说明: 必须使用GMT时间格式!  
+说明: 必须使用GMT时间格式!    
+
 8. 强制以独立页面打开  
 基本语法：`<meta http-equiv="window-target" content="_top">`    
 9. 定义网页文字及语言   
 基本语法：`<meta http-equiv="content-type" content="text/html; charset=字符集类型">`   
 举例：`<meta http-equiv="content-type" content="text/html; charset=utf-8">`     
+  
 10. 定义网页的定时跳转  
 基本语法：`<meta http-equiv="refresh" content="跳转的时间;URL=跳转到的地址">`   
-举例：`<meta http-equiv="refresh" content="5;URL=http://www.google.com">`   
+举例：`<meta http-equiv="refresh" content="5;URL=http://www.google.com">`     
+
 11. 网页打开时或退出时的效果  
 基本语法：`<meta http-equiv="page-exit" content="revealtrans(duration=延迟时间(秒),transition=数字 (转换方式))">`    
    &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;	&ensp;	  `<meta http-equiv="page-enter" content="revealtrans(duration=延迟时间(秒),transition=数字 (转换方式))">`  
 举例：`<meta http-equiv="page-exit" content="revealtrans(duration=10,transition=21)">`   
  &ensp;&ensp;&ensp;&ensp; &ensp;  `<meta http-equiv="page-enter" content="revealtrans(duration=8,transition=12)">`   
 
-|效果|transition|效果|transition|
+  |效果|transition|效果|transition|
 |---|---|---|---|
 |盒状收缩| 0| 溶解| 12|
 |盒装展开|1 |左右向中部收缩| 13 |
@@ -93,6 +103,7 @@
 |水平百叶窗| 9| 随即水平线 |21 |
 |横向棋盘式| 10 |随即垂直线 |22|
 |纵向棋盘式| 11 |随即 |23|  
+
 ---
 ## **`<body>`标签，网页上显示的内容放在这里**
 在网页上要展示出来的页面内容一定要放在body标签中。如下图是一个新闻文章的网页。
